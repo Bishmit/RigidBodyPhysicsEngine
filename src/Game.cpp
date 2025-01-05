@@ -31,7 +31,7 @@ namespace Physics {
         for (int i = 0; i < 2; ++i) {
 
             sf::CircleShape circle(radius);
-            circle.setFillColor(sf::Color::Green);
+            circle.setFillColor(sf::Color::White);
             circle.setPosition(
                 static_cast<float>(std::rand() % (800 - static_cast<int>(2 * radius))),
                 static_cast<float>(std::rand() % (600 - static_cast<int>(2 * radius)))
@@ -41,7 +41,7 @@ namespace Physics {
 
         // Initialize controllable circle
         controllableCircle.setRadius(radius);
-        controllableCircle.setFillColor(sf::Color::Red);
+        controllableCircle.setFillColor(sf::Color::White);
         controllableCircle.setPosition(400.f, 300.f);
         bodies.push_back(controllableCircle);
     }
@@ -62,7 +62,7 @@ namespace Physics {
             rectBodies.push_back(rectangle);
         }*/
 
-        rectangle.setFillColor(sf::Color::Green);
+        rectangle.setFillColor(sf::Color::White);
         rectangle.setSize(sf::Vector2f(width, height));
         rectangle.setPosition(450.f, 150.f); 
 

@@ -84,8 +84,14 @@ void RectangleCircleCollision::resolveRectangleCircleCollision(sf::RectangleShap
 
         if (maxRect < minCircle || maxCircle < minRect) {
             // No overlapno,  collision
+            rect.setOutlineColor(sf::Color::White); 
+            circle.setOutlineColor(sf::Color::White); 
             return;
         }
+        rect.setOutlineColor(sf::Color::Red);  // Border color
+        rect.setOutlineThickness(1.f);
+        circle.setOutlineColor(sf::Color::Red);  // Border color
+        circle.setOutlineThickness(1.f);
 
         // Calculate depth i.e overlap
         float axisDepth = std::min(maxRect, maxCircle) - std::max(minRect, minCircle);
