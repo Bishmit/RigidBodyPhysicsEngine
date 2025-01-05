@@ -25,7 +25,7 @@ namespace Physics {
         /*std::vector<sf::RectangleShape> rectBodies;*/
         sf::RectangleShape rectangle; 
         //sf::RectangleShape rect;
-        const float radius = 30.f;
+        const float radius = 50.f;
         float movespeed = 300.f;
         bool isEnterPressed = false;
 

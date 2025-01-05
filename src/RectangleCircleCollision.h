@@ -12,6 +12,7 @@ public:
 
 private:
     static float dotProduct(const sf::Vector2f& d1, const sf::Vector2f& d2);
+    static sf::Vector2f findCenter(const sf::RectangleShape& rect);
     static std::pair<float, float> projectRectangleOntoAxis(const sf::RectangleShape& rect, const sf::Vector2f& axis);
     static std::pair<float, float> projectCircleOntoAxis(const sf::CircleShape& circle, const sf::Vector2f& axis);
     static std::vector<sf::Vector2f> getAxes(const sf::RectangleShape& rect);

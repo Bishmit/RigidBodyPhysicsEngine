@@ -89,9 +89,9 @@ void RectangleCircleCollision::resolveRectangleCircleCollision(sf::RectangleShap
             return;
         }
         rect.setOutlineColor(sf::Color::Red);  // Border color
-        rect.setOutlineThickness(1.f);
+        rect.setOutlineThickness(0.1f);
         circle.setOutlineColor(sf::Color::Red);  // Border color
-        circle.setOutlineThickness(1.f);
+        circle.setOutlineThickness(0.1f);
 
         // Calculate depth i.e overlap
         float axisDepth = std::min(maxRect, maxCircle) - std::max(minRect, minCircle);
@@ -107,7 +107,7 @@ void RectangleCircleCollision::resolveRectangleCircleCollision(sf::RectangleShap
     }
 
     // Ensure normal points from rectangle to circle
-    sf::Vector2f directionToCircle = circleCenter - rect.getPosition();
+    sf::Vector2f directionToCircle = circleCenter - findCenter(rect);
     if (dotProduct(normal, directionToCircle) < 0.f) {
         normal = -normal;
     }
@@ -120,4 +120,15 @@ void RectangleCircleCollision::resolveRectangleCircleCollision(sf::RectangleShap
 
 float RectangleCircleCollision::dotProduct(const sf::Vector2f& v1, const sf::Vector2f& v2) {
     return v1.x * v2.x + v1.y * v2.y;
+}
+
+sf::Vector2f RectangleCircleCollision::findCenter(const sf::RectangleShape& rect) {
+    auto corners = getCorners(rect);
+    float sumX = 0.f;
+    float sumY = 0.f;
+    for (const auto& corner : corners) {
+        sumX += corner.x;
+        sumY += corner.y;
+    }
+    return { sumX / corners.size(), sumY / corners.size() };
 }

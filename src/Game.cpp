@@ -28,16 +28,16 @@ namespace Physics {
     void Game::initCircles()
     {
         // Initialize 8 circles with random positions
-        for (int i = 0; i < 2; ++i) {
+        /*for (int i = 0; i < 2; ++i) {
 
             sf::CircleShape circle(radius);
-            circle.setFillColor(sf::Color::White);
+            circle.setFillColor(sf::Color::Green);
             circle.setPosition(
                 static_cast<float>(std::rand() % (800 - static_cast<int>(2 * radius))),
                 static_cast<float>(std::rand() % (600 - static_cast<int>(2 * radius)))
             );
             bodies.push_back(circle);
-        }
+        }*/
 
         // Initialize controllable circle
         controllableCircle.setRadius(radius);
