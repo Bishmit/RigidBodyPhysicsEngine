@@ -28,16 +28,16 @@ namespace Physics {
     void Game::initCircles()
     {
         // Initialize 8 circles with random positions
-        /*for (int i = 0; i < 2; ++i) {
+        for (int i = 0; i < 5; ++i) {
 
             sf::CircleShape circle(radius);
-            circle.setFillColor(sf::Color::Green);
+            circle.setFillColor(sf::Color::White);
             circle.setPosition(
                 static_cast<float>(std::rand() % (800 - static_cast<int>(2 * radius))),
                 static_cast<float>(std::rand() % (600 - static_cast<int>(2 * radius)))
             );
             bodies.push_back(circle);
-        }*/
+        }
 
         // Initialize controllable circle
         controllableCircle.setRadius(radius);
@@ -48,29 +48,29 @@ namespace Physics {
 
     void Game::initRectangles()
     {
-        const float width = 150.f;
-        const float height = 150.f;
+        const float width = 50.f;
+        const float height = 50.f;
 
         // Initialize 8 rectangles with random positions
-        /*for (int i = 0; i < 2; ++i) {
+        for (int i = 0; i < 5; ++i) {
             sf::RectangleShape rectangle(sf::Vector2f(width, height));
-            rectangle.setFillColor(sf::Color::Green);
+            rectangle.setFillColor(sf::Color::White);
             rectangle.setPosition(
                 static_cast<float>(std::rand() % (800 - static_cast<int>(width))),
                 static_cast<float>(std::rand() % (600 - static_cast<int>(height)))
             );
             rectBodies.push_back(rectangle);
-        }*/
+        }
 
-        rectangle.setFillColor(sf::Color::White);
+      /*  rectangle.setFillColor(sf::Color::White);
         rectangle.setSize(sf::Vector2f(width, height));
-        rectangle.setPosition(450.f, 150.f); 
+        rectangle.setPosition(450.f, 150.f); */
 
         // Initialize controllable rectangle
-       /* rect.setSize(sf::Vector2f(width, height));
-        rect.setFillColor(sf::Color::Red);
-        rect.setPosition(400.f, 300.f);*/
-       // rectBodies.push_back(rect);
+        rect.setSize(sf::Vector2f(width, height));
+        rect.setFillColor(sf::Color::Cyan);
+        rect.setPosition(400.f, 300.f);
+        rectBodies.push_back(rect);
     }
 
     void Game::processEvents() {
@@ -84,7 +84,7 @@ namespace Physics {
             //        sf::RectangleShape remRect(sf::Vector2f(50.f, 50.f));
             //        remRect.setFillColor(sf::Color::Green);
             //        remRect.setPosition(static_cast<float>(event.mouseButton.x), static_cast<float>(event.mouseButton.y));
-            //        //rectBodies.push_back(remRect);
+            //        rectBodies.push_back(remRect);
             //    }
             //}
         }
@@ -92,21 +92,21 @@ namespace Physics {
         // Control the red circle with arrow keys
         const float deltaTime = clock.restart().asSeconds();
 
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && controllableCircle.getPosition().y > 0) {
-            controllableCircle.move(0.f, -movespeed*deltaTime);
-        }
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) && controllableCircle.getPosition().y < 540) {
-            controllableCircle.move(0.f, movespeed*deltaTime);
-        }
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left) && controllableCircle.getPosition().x > 0) {
-            controllableCircle.move(-movespeed*deltaTime, 0.f);
-        }
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right) && controllableCircle.getPosition().x < 740) {
-            controllableCircle.move(movespeed*deltaTime, 0.f);
-        }
+        //if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && controllableCircle.getPosition().y > 0) {
+        //    controllableCircle.move(0.f, -movespeed*deltaTime);
+        //}
+        //if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) && controllableCircle.getPosition().y < 540) {
+        //    controllableCircle.move(0.f, movespeed*deltaTime);
+        //}
+        //if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left) && controllableCircle.getPosition().x > 0) {
+        //    controllableCircle.move(-movespeed*deltaTime, 0.f);
+        //}
+        //if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right) && controllableCircle.getPosition().x < 740) {
+        //    controllableCircle.move(movespeed*deltaTime, 0.f);
+        //}
 
         // control the one rectangle
-      /*  if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && rect.getPosition().y > 0) {
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && rect.getPosition().y > 0) {
             rect.move(0.f, -movespeed * deltaTime);
         }
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) && rect.getPosition().y < 540) {
@@ -117,7 +117,7 @@ namespace Physics {
         }
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right) && rect.getPosition().x < 740) {
             rect.move(movespeed * deltaTime, 0.f);
-        }*/
+        }
 
 
     }
@@ -126,30 +126,30 @@ namespace Physics {
         //bodies.back() = controllableCircle;
 
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter) && !isEnterPressed) {
-           // rect.rotate(45.f);
+            rect.rotate(45.f);
             isEnterPressed = true;
         }
         else if (!sf::Keyboard::isKeyPressed(sf::Keyboard::Enter)) {
             isEnterPressed = false;
         }
 
-          //rectBodies.back() = rect;
+           rectBodies.back() = rect;
           //ResolveCollisions(bodies);
          //RectangleCollision::resolvePolygonCollisions(rectBodies);
-        RectangleCircleCollision::resolveRectangleCircleCollision(rectangle, controllableCircle);
+        RectangleCircleCollision::wholePolygonCircleCollision(rectBodies, bodies);
         //std::cout << "Position: " << controllableCircle.getPosition().x << ", " << controllableCircle.getPosition().y << std::endl;
     }
 
     void Game::render() {
         window.clear();
-       /* for (const auto& body : bodies) {
+        for (const auto& body : bodies) {
             window.draw(body);
         }
        for (const auto& r : rectBodies) {
            window.draw(r);
-       }*/
-        window.draw(rectangle); 
-        window.draw(controllableCircle); 
+       }
+       // window.draw(rectangle); 
+        //window.draw(controllableCircle); 
 
         window.display();
     }

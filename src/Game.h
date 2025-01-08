@@ -22,10 +22,10 @@ namespace Physics {
         sf::Clock clock;
         std::vector<sf::CircleShape> bodies;
         sf::CircleShape controllableCircle;
-        /*std::vector<sf::RectangleShape> rectBodies;*/
-        sf::RectangleShape rectangle; 
-        //sf::RectangleShape rect;
-        const float radius = 50.f;
+        std::vector<sf::RectangleShape> rectBodies;
+        //sf::RectangleShape rectangle; 
+        sf::RectangleShape rect;
+        const float radius = 30.f;
         float movespeed = 300.f;
         bool isEnterPressed = false;
 

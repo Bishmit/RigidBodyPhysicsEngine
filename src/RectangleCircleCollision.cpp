@@ -65,7 +65,8 @@ std::vector<sf::Vector2f> RectangleCircleCollision::getCorners(const sf::Rectang
     return corners;
 }
 
-void RectangleCircleCollision::resolveRectangleCircleCollision(sf::RectangleShape& rect, sf::CircleShape& circle) {
+
+bool RectangleCircleCollision::resolveRectangleCircleCollision(sf::RectangleShape& rect, sf::CircleShape& circle, sf::Vector2f &normal, float &depth) {
     sf::Vector2f circleCenter = circle.getPosition() + sf::Vector2f(circle.getRadius(), circle.getRadius());// Correct center
     auto rectAxes = getAxes(rect);
     auto circleAxes = getAxesCircle(rect, circleCenter);
@@ -74,8 +75,7 @@ void RectangleCircleCollision::resolveRectangleCircleCollision(sf::RectangleShap
     std::vector<sf::Vector2f> axes = rectAxes;
     axes.insert(axes.end(), circleAxes.begin(), circleAxes.end());
 
-    float depth = std::numeric_limits<float>::max();
-    sf::Vector2f normal; // Minimum Translation Vector axis
+    depth = std::numeric_limits<float>::max();
 
     // SAT Test: Check all axes
     for (const auto& axis : axes) {
@@ -86,7 +86,7 @@ void RectangleCircleCollision::resolveRectangleCircleCollision(sf::RectangleShap
             // No overlapno,  collision
             rect.setOutlineColor(sf::Color::White); 
             circle.setOutlineColor(sf::Color::White); 
-            return;
+            return false; 
         }
         rect.setOutlineColor(sf::Color::Red);  // Border color
         rect.setOutlineThickness(0.1f);
@@ -111,11 +111,27 @@ void RectangleCircleCollision::resolveRectangleCircleCollision(sf::RectangleShap
     if (dotProduct(normal, directionToCircle) < 0.f) {
         normal = -normal;
     }
+    return true; 
+}
 
-    // Resolve collision
-    sf::Vector2f resolution = normal * depth;
-    rect.move(-resolution / 2.f); // Move rectangle away
-    circle.move(resolution / 2.f); // Move circle away
+
+void RectangleCircleCollision::wholePolygonCircleCollision(std::vector<sf::RectangleShape>& rectBodies, std::vector<sf::CircleShape>& circleBodies) {
+    for (size_t i = 0; i < rectBodies.size(); ++i) {
+        for (size_t j = 0; j < circleBodies.size(); ++j) {
+            sf::Vector2f normal;
+            float depth;
+            if (resolveRectangleCircleCollision(rectBodies[i], circleBodies[j], normal, depth)) {
+                sf::Vector2f displacement = normal * depth;
+                rectBodies[i].move(-displacement / 2.f);
+                circleBodies[j].move(displacement / 2.f);
+
+                rectBodies[i].setOutlineColor(sf::Color::Yellow);
+                rectBodies[i].setOutlineThickness(1.0f);
+                circleBodies[j].setOutlineColor(sf::Color::Yellow);
+                circleBodies[j].setOutlineThickness(1.0f);
+            }
+        }
+    }
 }
 
 float RectangleCircleCollision::dotProduct(const sf::Vector2f& v1, const sf::Vector2f& v2) {

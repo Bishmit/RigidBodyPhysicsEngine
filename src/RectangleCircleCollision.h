@@ -8,7 +8,8 @@
 
 class RectangleCircleCollision {
 public:
-    static void resolveRectangleCircleCollision(sf::RectangleShape& rect, sf::CircleShape& circle);
+    static void wholePolygonCircleCollision(std::vector<sf::RectangleShape>& rectBodies, std::vector<sf::CircleShape>& circleBodies); 
+    static bool resolveRectangleCircleCollision(sf::RectangleShape& rect, sf::CircleShape& circle, sf::Vector2f &normal, float &depth);
 
 private:
     static float dotProduct(const sf::Vector2f& d1, const sf::Vector2f& d2);
@@ -18,5 +19,4 @@ private:
     static std::vector<sf::Vector2f> getAxes(const sf::RectangleShape& rect);
     static std::vector<sf::Vector2f> getAxesCircle(const sf::RectangleShape& rect, const sf::Vector2f& circleCenter);
     static std::vector<sf::Vector2f> RectangleCircleCollision::getCorners(const sf::RectangleShape& rect);
-
 }; 
