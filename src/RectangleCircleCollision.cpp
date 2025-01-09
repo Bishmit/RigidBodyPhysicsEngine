@@ -125,10 +125,10 @@ void RectangleCircleCollision::wholePolygonCircleCollision(std::vector<sf::Recta
                 rectBodies[i].move(-displacement / 2.f);
                 circleBodies[j].move(displacement / 2.f);
 
-                rectBodies[i].setOutlineColor(sf::Color::Yellow);
-                rectBodies[i].setOutlineThickness(1.0f);
-                circleBodies[j].setOutlineColor(sf::Color::Yellow);
-                circleBodies[j].setOutlineThickness(1.0f);
+                rectBodies[i].setOutlineColor(sf::Color::Red);
+                rectBodies[i].setOutlineThickness(-1.0f);
+                circleBodies[j].setOutlineColor(sf::Color::Red);
+                circleBodies[j].setOutlineThickness(-1.0f);
             }
         }
     }

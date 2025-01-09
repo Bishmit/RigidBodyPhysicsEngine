@@ -1,7 +1,6 @@
 #include "CircleCollision.h"
-#include <cmath>
 
-bool IntersectCircles(
+bool CircleCollision::IntersectCircles(
     const sf::Vector2f& centerA, float radiusA,
     const sf::Vector2f& centerB, float radiusB,
     sf::Vector2f& normal, float& depth
@@ -23,15 +22,24 @@ bool IntersectCircles(
     return true;
 }
 
-void ResolveCollisions(std::vector<sf::CircleShape>& bodies) {
+void CircleCollision::ResolveCollisions(std::vector<sf::CircleShape>& bodies) {
     for (size_t i = 0; i < bodies.size(); ++i) {
         for (size_t j = i + 1; j < bodies.size(); ++j) {
             sf::Vector2f normal;
             float depth;
-            if (IntersectCircles(bodies[i].getPosition(), bodies[i].getRadius(), bodies[j].getPosition(), bodies[j].getRadius(), normal, depth)) {
+            if (IntersectCircles(
+                bodies[i].getPosition(), bodies[i].getRadius(),
+                bodies[j].getPosition(), bodies[j].getRadius(),
+                normal, depth
+            )) {
                 sf::Vector2f displacement = normal * (depth / 2.f);
                 bodies[i].move(-displacement);
                 bodies[j].move(displacement);
+
+                bodies[i].setOutlineColor(sf::Color::Green);
+                bodies[i].setOutlineThickness(-2.0f);
+                bodies[j].setOutlineColor(sf::Color::Green);
+                bodies[j].setOutlineThickness(-2.0f);
             }
         }
     }

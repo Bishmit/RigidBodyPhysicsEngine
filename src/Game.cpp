@@ -8,7 +8,7 @@
 
 namespace Physics {
     Game::Game()
-        : window(sf::VideoMode(800, 600), "Circle Collision Simulation"),
+        :WIDTH(1300), HEIGHT(700), window(sf::VideoMode(WIDTH, HEIGHT), "Circle Collision Simulation"),
         controllableCircle(radius), spawnInterval(sf::seconds(2.f)) {
 
         window.setFramerateLimit(60);
@@ -28,13 +28,13 @@ namespace Physics {
     void Game::initCircles()
     {
         // Initialize 8 circles with random positions
-        for (int i = 0; i < 5; ++i) {
+        for (int i = 0; i < 8; ++i) {
 
             sf::CircleShape circle(radius);
             circle.setFillColor(sf::Color::White);
             circle.setPosition(
-                static_cast<float>(std::rand() % (800 - static_cast<int>(2 * radius))),
-                static_cast<float>(std::rand() % (600 - static_cast<int>(2 * radius)))
+                static_cast<float>(std::rand() % (WIDTH - static_cast<int>(2 * radius))),
+                static_cast<float>(std::rand() % (HEIGHT - static_cast<int>(2 * radius)))
             );
             bodies.push_back(circle);
         }
@@ -52,12 +52,12 @@ namespace Physics {
         const float height = 50.f;
 
         // Initialize 8 rectangles with random positions
-        for (int i = 0; i < 5; ++i) {
+        for (int i = 0; i < 8; ++i) {
             sf::RectangleShape rectangle(sf::Vector2f(width, height));
             rectangle.setFillColor(sf::Color::White);
             rectangle.setPosition(
-                static_cast<float>(std::rand() % (800 - static_cast<int>(width))),
-                static_cast<float>(std::rand() % (600 - static_cast<int>(height)))
+                static_cast<float>(std::rand() % (WIDTH - static_cast<int>(width))),
+                static_cast<float>(std::rand() % (HEIGHT - static_cast<int>(height)))
             );
             rectBodies.push_back(rectangle);
         }
@@ -106,16 +106,16 @@ namespace Physics {
         //}
 
         // control the one rectangle
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && rect.getPosition().y > 0) {
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
             rect.move(0.f, -movespeed * deltaTime);
         }
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) && rect.getPosition().y < 540) {
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
             rect.move(0.f, movespeed * deltaTime);
         }
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left) && rect.getPosition().x > 0) {
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
             rect.move(-movespeed * deltaTime, 0.f);
         }
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right) && rect.getPosition().x < 740) {
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
             rect.move(movespeed * deltaTime, 0.f);
         }
 
@@ -124,19 +124,16 @@ namespace Physics {
 
     void Game::update() {
         //bodies.back() = controllableCircle;
-
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter) && !isEnterPressed) {
-            rect.rotate(45.f);
-            isEnterPressed = true;
-        }
-        else if (!sf::Keyboard::isKeyPressed(sf::Keyboard::Enter)) {
-            isEnterPressed = false;
+        rect.setOrigin(sf::Vector2f(rect.getSize()/2.f));
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter)) {
+            rect.setOrigin(sf::Vector2f(rect.getSize() / 2.f));
+            rect.rotate(1.5f);
         }
 
-           rectBodies.back() = rect;
-          //ResolveCollisions(bodies);
-         //RectangleCollision::resolvePolygonCollisions(rectBodies);
-        RectangleCircleCollision::wholePolygonCircleCollision(rectBodies, bodies);
+         rectBodies.back() = rect;
+         CircleCollision::ResolveCollisions(bodies);
+         RectangleCollision::resolvePolygonCollisions(rectBodies);
+         RectangleCircleCollision::wholePolygonCircleCollision(rectBodies, bodies);
         //std::cout << "Position: " << controllableCircle.getPosition().x << ", " << controllableCircle.getPosition().y << std::endl;
     }
 

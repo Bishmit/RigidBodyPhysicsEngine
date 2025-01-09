@@ -5,6 +5,7 @@
 #include "RectangleCollision.h"
 #include "RectangleCircleCollision.h"
 
+
 namespace Physics {
 
     class Game {
@@ -15,6 +16,7 @@ namespace Physics {
         void initRectangles();
 
     private:
+        int WIDTH, HEIGHT; 
         void processEvents();
         void update();
         void render();
@@ -27,7 +29,6 @@ namespace Physics {
         sf::RectangleShape rect;
         const float radius = 30.f;
         float movespeed = 300.f;
-        bool isEnterPressed = false;
 
         int maxRectangles = 5; // Cap the number of rectangles
         sf::Event event{};

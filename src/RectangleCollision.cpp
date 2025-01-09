@@ -94,23 +94,23 @@ bool RectangleCollision::checkCollision(const sf::RectangleShape& rectA, const s
     return true;
 }
 
-void RectangleCollision::resolvePolygonCollisions(std::vector<sf::RectangleShape>& bodies) {
-    for (size_t i = 0; i < bodies.size(); ++i) {
-        bodies[i].setFillColor(sf::Color::White);
-
-        for (size_t j = i + 1; j < bodies.size(); ++j) {
+void RectangleCollision::resolvePolygonCollisions(std::vector<sf::RectangleShape>& rectbodies) {
+    for (size_t i = 0; i < rectbodies.size(); ++i) {
+        for (size_t j = i + 1; j < rectbodies.size(); ++j) {
             sf::Vector2f normal;
             float depth;
-            if (checkCollision(bodies[i], bodies[j], normal, depth)) {
+            if (checkCollision(rectbodies[i], rectbodies[j], normal, depth)) {
                 sf::Vector2f displacement = normal * (depth / 2.f);
-                bodies[i].move(-displacement);
-                bodies[j].move(displacement);
-                bodies[j].setOutlineColor(sf::Color::Yellow);
-                bodies[i].setFillColor(sf::Color::Yellow);
+                rectbodies[i].move(-displacement);
+                rectbodies[j].move(displacement);
+
+                rectbodies[i].setOutlineColor(sf::Color::Blue);
+                rectbodies[i].setOutlineThickness(-1.0f);
+                rectbodies[j].setOutlineColor(sf::Color::Blue);
+                rectbodies[j].setOutlineThickness(-1.0f);
             }
         }
     }
-    //std::cout<<deltaTime<<std::endl;
 }
 
 float RectangleCollision::dotProduct(sf::Vector2f &d1, sf::Vector2f &d2) {
