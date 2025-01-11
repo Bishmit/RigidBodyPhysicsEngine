@@ -1,8 +1,5 @@
 #include "RectangleCircleCollision.h"
-#include <cmath>
-#include <limits>
-#include <vector>
-#include <SFML/Graphics.hpp>
+
 
 std::pair<float, float> RectangleCircleCollision::projectRectangleOntoAxis(const sf::RectangleShape& rect, const sf::Vector2f& axis) {
     float min = std::numeric_limits<float>::max();
@@ -114,25 +111,6 @@ bool RectangleCircleCollision::resolveRectangleCircleCollision(sf::RectangleShap
     return true; 
 }
 
-
-void RectangleCircleCollision::wholePolygonCircleCollision(std::vector<sf::RectangleShape>& rectBodies, std::vector<sf::CircleShape>& circleBodies) {
-    for (size_t i = 0; i < rectBodies.size(); ++i) {
-        for (size_t j = 0; j < circleBodies.size(); ++j) {
-            sf::Vector2f normal;
-            float depth;
-            if (resolveRectangleCircleCollision(rectBodies[i], circleBodies[j], normal, depth)) {
-                sf::Vector2f displacement = normal * depth;
-                rectBodies[i].move(-displacement / 2.f);
-                circleBodies[j].move(displacement / 2.f);
-
-                rectBodies[i].setOutlineColor(sf::Color::Red);
-                rectBodies[i].setOutlineThickness(-1.0f);
-                circleBodies[j].setOutlineColor(sf::Color::Red);
-                circleBodies[j].setOutlineThickness(-1.0f);
-            }
-        }
-    }
-}
 
 float RectangleCircleCollision::dotProduct(const sf::Vector2f& v1, const sf::Vector2f& v2) {
     return v1.x * v2.x + v1.y * v2.y;

@@ -1,20 +1,9 @@
 #include "Game.h"
-#include <ctime>
-#include <cstdlib>
-#include<iostream>
-
-
-#include "RectangleCircleCollision.h"
 
 namespace Physics {
     Game::Game()
-        :WIDTH(1300), HEIGHT(700), window(sf::VideoMode(WIDTH, HEIGHT), "Circle Collision Simulation"),
-        controllableCircle(radius), spawnInterval(sf::seconds(2.f)) {
-
+        :WIDTH(1300), HEIGHT(700), window(sf::VideoMode(WIDTH, HEIGHT), "Circle Collision Simulation") {
         window.setFramerateLimit(60);
-        std::srand(static_cast<unsigned>(std::time(nullptr)));
-        initCircles(); 
-        initRectangles(); 
     }
 
     void Game::run() {
@@ -25,129 +14,45 @@ namespace Physics {
         }
     }
 
-    void Game::initCircles()
-    {
-        // Initialize 8 circles with random positions
-        for (int i = 0; i < 8; ++i) {
-
-            sf::CircleShape circle(radius);
-            circle.setFillColor(sf::Color::White);
-            circle.setPosition(
-                static_cast<float>(std::rand() % (WIDTH - static_cast<int>(2 * radius))),
-                static_cast<float>(std::rand() % (HEIGHT - static_cast<int>(2 * radius)))
-            );
-            bodies.push_back(circle);
-        }
-
-        // Initialize controllable circle
-        controllableCircle.setRadius(radius);
-        controllableCircle.setFillColor(sf::Color::White);
-        controllableCircle.setPosition(400.f, 300.f);
-        bodies.push_back(controllableCircle);
-    }
-
-    void Game::initRectangles()
-    {
-        const float width = 50.f;
-        const float height = 50.f;
-
-        // Initialize 8 rectangles with random positions
-        for (int i = 0; i < 8; ++i) {
-            sf::RectangleShape rectangle(sf::Vector2f(width, height));
-            rectangle.setFillColor(sf::Color::White);
-            rectangle.setPosition(
-                static_cast<float>(std::rand() % (WIDTH - static_cast<int>(width))),
-                static_cast<float>(std::rand() % (HEIGHT - static_cast<int>(height)))
-            );
-            rectBodies.push_back(rectangle);
-        }
-
-      /*  rectangle.setFillColor(sf::Color::White);
-        rectangle.setSize(sf::Vector2f(width, height));
-        rectangle.setPosition(450.f, 150.f); */
-
-        // Initialize controllable rectangle
-        rect.setSize(sf::Vector2f(width, height));
-        rect.setFillColor(sf::Color::Cyan);
-        rect.setPosition(400.f, 300.f);
-        rectBodies.push_back(rect);
-    }
-
     void Game::processEvents() {
         while (window.pollEvent(event)) {
             if (event.type == sf::Event::Closed) {
                 window.close();
             }
 
-            //if (event.type == sf::Event::MouseButtonPressed) {
-            //    if (event.mouseButton.button == sf::Mouse::Left) {
-            //        sf::RectangleShape remRect(sf::Vector2f(50.f, 50.f));
-            //        remRect.setFillColor(sf::Color::Green);
-            //        remRect.setPosition(static_cast<float>(event.mouseButton.x), static_cast<float>(event.mouseButton.y));
-            //        rectBodies.push_back(remRect);
-            //    }
-            //}
-        }
+            if (event.type == sf::Event::MouseButtonPressed) {
+                if (event.mouseButton.button == sf::Mouse::Left) {
+                    // Create and add a new circle at the mouse position
+                    auto circle = std::make_unique<sf::CircleShape>(20.f);
+                    circle->setPosition(static_cast<float>(event.mouseButton.x), static_cast<float>(event.mouseButton.y));
+                    circle->setFillColor(sf::Color::Green);
+                    shapes.push_back(std::move(circle));
+                }
 
-        // Control the red circle with arrow keys
-        const float deltaTime = clock.restart().asSeconds();
-
-        //if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && controllableCircle.getPosition().y > 0) {
-        //    controllableCircle.move(0.f, -movespeed*deltaTime);
-        //}
-        //if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) && controllableCircle.getPosition().y < 540) {
-        //    controllableCircle.move(0.f, movespeed*deltaTime);
-        //}
-        //if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left) && controllableCircle.getPosition().x > 0) {
-        //    controllableCircle.move(-movespeed*deltaTime, 0.f);
-        //}
-        //if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right) && controllableCircle.getPosition().x < 740) {
-        //    controllableCircle.move(movespeed*deltaTime, 0.f);
-        //}
-
-        // control the one rectangle
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
-            rect.move(0.f, -movespeed * deltaTime);
+                if (event.mouseButton.button == sf::Mouse::Right) {
+                    // Create and add a new rectangle at the mouse position
+                    auto rectangle = std::make_unique<sf::RectangleShape>(sf::Vector2f(50.f, 50.f));
+                    rectangle->setPosition(static_cast<float>(event.mouseButton.x), static_cast<float>(event.mouseButton.y));
+                    rectangle->setFillColor(sf::Color::Green);
+                    shapes.push_back(std::move(rectangle));
+                }
+            }
         }
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
-            rect.move(0.f, movespeed * deltaTime);
-        }
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) {
-            rect.move(-movespeed * deltaTime, 0.f);
-        }
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) {
-            rect.move(movespeed * deltaTime, 0.f);
-        }
-
 
     }
 
     void Game::update() {
-        //bodies.back() = controllableCircle;
-        rect.setOrigin(sf::Vector2f(rect.getSize()/2.f));
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Enter)) {
-            rect.setOrigin(sf::Vector2f(rect.getSize() / 2.f));
-            rect.rotate(1.5f);
-        }
-
-         rectBodies.back() = rect;
-         CircleCollision::ResolveCollisions(bodies);
-         RectangleCollision::resolvePolygonCollisions(rectBodies);
-         RectangleCircleCollision::wholePolygonCircleCollision(rectBodies, bodies);
-        //std::cout << "Position: " << controllableCircle.getPosition().x << ", " << controllableCircle.getPosition().y << std::endl;
+       
+        HandleAllCollision::CollisionManager(shapes);
     }
 
     void Game::render() {
         window.clear();
-        for (const auto& body : bodies) {
-            window.draw(body);
+        for (const auto &body : shapes) {
+            window.draw(*body);
         }
-       for (const auto& r : rectBodies) {
-           window.draw(r);
-       }
-       // window.draw(rectangle); 
-        //window.draw(controllableCircle); 
-
         window.display();
     }
 }
+
+

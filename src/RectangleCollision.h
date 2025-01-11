@@ -1,14 +1,9 @@
 #pragma once
 #include <SFML/Graphics.hpp>
-#include <vector>
-#include <iostream>
-#include <limits>
-#include <cmath>
 
 class RectangleCollision {
 public:
     static bool checkCollision(const sf::RectangleShape& rectA, const sf::RectangleShape& rectB, sf::Vector2f& normal, float& depth);
-    static void resolvePolygonCollisions(std::vector<sf::RectangleShape>& rectbodies);
 
 private:
     static float dotProduct(sf::Vector2f& d1, sf::Vector2f& d2);

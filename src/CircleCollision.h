@@ -1,6 +1,5 @@
 #pragma once
 #include <SFML/Graphics.hpp>
-#include <vector>
 #include <cmath>
 
 class CircleCollision {
@@ -11,7 +10,4 @@ public:
         const sf::Vector2f& centerB, float radiusB,
         sf::Vector2f& normal, float& depth
     );
-
-    // Resolves collisions for a vector of circle bodies
-    static void ResolveCollisions(std::vector<sf::CircleShape>& bodies);
 };

@@ -94,25 +94,6 @@ bool RectangleCollision::checkCollision(const sf::RectangleShape& rectA, const s
     return true;
 }
 
-void RectangleCollision::resolvePolygonCollisions(std::vector<sf::RectangleShape>& rectbodies) {
-    for (size_t i = 0; i < rectbodies.size(); ++i) {
-        for (size_t j = i + 1; j < rectbodies.size(); ++j) {
-            sf::Vector2f normal;
-            float depth;
-            if (checkCollision(rectbodies[i], rectbodies[j], normal, depth)) {
-                sf::Vector2f displacement = normal * (depth / 2.f);
-                rectbodies[i].move(-displacement);
-                rectbodies[j].move(displacement);
-
-                rectbodies[i].setOutlineColor(sf::Color::Blue);
-                rectbodies[i].setOutlineThickness(-1.0f);
-                rectbodies[j].setOutlineColor(sf::Color::Blue);
-                rectbodies[j].setOutlineThickness(-1.0f);
-            }
-        }
-    }
-}
-
 float RectangleCollision::dotProduct(sf::Vector2f &d1, sf::Vector2f &d2) {
     return d1.x * d2.x + d1.y * d2.y;
 }

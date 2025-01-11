@@ -1,14 +1,8 @@
 #pragma once
-
 #include <SFML/Graphics.hpp>
-#include <vector>
-#include <utility>
-#include <iostream>
-#include <cmath>
 
 class RectangleCircleCollision {
 public:
-    static void wholePolygonCircleCollision(std::vector<sf::RectangleShape>& rectBodies, std::vector<sf::CircleShape>& circleBodies); 
     static bool resolveRectangleCircleCollision(sf::RectangleShape& rect, sf::CircleShape& circle, sf::Vector2f &normal, float &depth);
 
 private:
