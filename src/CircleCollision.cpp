@@ -1,4 +1,5 @@
 #include "CircleCollision.h"
+#include <iostream>
 
 bool CircleCollision::IntersectCircles(
     const sf::Vector2f& centerA, float radiusA,
@@ -18,6 +19,5 @@ bool CircleCollision::IntersectCircles(
 
     normal = diff / distance;
     depth = radiiSum - distance;
-
     return true;
 }

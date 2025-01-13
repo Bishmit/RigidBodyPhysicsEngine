@@ -1,5 +1,6 @@
 #pragma once
 #include "HandleAllCollision.h"
+#include "Physics.h"
 
 namespace Physics {
 
@@ -19,11 +20,15 @@ namespace Physics {
         const float radius = 30.f;
         float movespeed = 300.f;
         std::vector<std::unique_ptr<sf::Shape>> shapes;
+        std::unordered_map<sf::Shape*, PhysicsManger> physicsMap;
 
         int maxRectangles = 5; 
         sf::Event event{};
         bool lockClick = false;
         sf::Clock spawnClock;       
-        sf::Time spawnInterval;    
+        sf::Time spawnInterval;  
+        std::unique_ptr<sf::Shape> createBody(bool isStatic,
+            std::unordered_map<sf::Shape*, PhysicsManger>& physicsMap,
+            const std::string& shapeType, const sf::Vector2f& size, float radius);
     };
 }

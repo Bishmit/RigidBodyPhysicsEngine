@@ -45,6 +45,7 @@ add_executable(${PROJECT_NAME}
         src/RectangleCircleCollision.h
         src/HandleAllCollision.h
         src/HandleAllCollision.cpp
+        src/Physics.h
 )
 
 target_link_libraries(${PROJECT_NAME} PRIVATE sfml-graphics ImGui-SFML::ImGui-SFML)
