@@ -5,8 +5,8 @@ class RectangleCollision {
 public:
     static bool checkCollision(const sf::RectangleShape& rectA, const sf::RectangleShape& rectB, sf::Vector2f& normal, float& depth);
 
-private:
     static float dotProduct(sf::Vector2f& d1, sf::Vector2f& d2);
+private:
     static std::pair<float, float> projectRectangleOntoAxis(const sf::RectangleShape& rect, const sf::Vector2f& axis);
     static bool overlapOnAxis(const std::pair<float, float>& projA, const std::pair<float, float>& projB);
     static std::vector<sf::Vector2f> getAxes(const sf::RectangleShape& rect);

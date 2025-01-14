@@ -1,10 +1,14 @@
 #include "Game.h"
+#include "HandleAllCollision.h"
 
 namespace Physics {
     Game::Game()
-        :WIDTH(1300), HEIGHT(700), window(sf::VideoMode(WIDTH, HEIGHT), "Circle Collision Simulation") {
+        : WIDTH(1300), HEIGHT(700), window(sf::VideoMode(WIDTH, HEIGHT), "Circle Collision Simulation") {
         window.setFramerateLimit(60);
-        shapes.push_back(std::move(createBody(false, physicsMap, "Box", { 600.f, 10.f }, 0.f)));
+
+        // Create a static platform at the bottom of the screen
+        shapes.push_back(std::move(createBody(true, physicsMap, "Box", { 600.f, 10.f }, 0.f, { 350.f, 650.f }, { 0.f, 0.f })));
+
     }
 
     void Game::run() {
@@ -23,20 +27,21 @@ namespace Physics {
 
             if (event.type == sf::Event::MouseButtonPressed) {
                 if (event.mouseButton.button == sf::Mouse::Left) {
-                    shapes.push_back(std::move(createBody(true, physicsMap, "Circle", { 0.f, 0.f }, 25.f)));
+                    // Create a dynamic rectangle at a predefined position
+                    auto rect = createBody(false, physicsMap, "Box", { 100.f, 50.f }, 0.f, { static_cast<float>(event.mouseButton.x), static_cast<float>(event.mouseButton.y) }, {0.f, 0.f});
+                    shapes.push_back(std::move(rect));
                 }
 
                 if (event.mouseButton.button == sf::Mouse::Right) {
-                    // Create and add a new rectangle at the mouse position
-                    shapes.push_back(std::move(createBody(true, physicsMap, "Box", { 25.f, 25.f }, 0.f)));
+                    // Create a dynamic circle at a predefined position
+                    auto circle = createBody(false, physicsMap, "Circle", {}, 25.f, { static_cast<float>(event.mouseButton.x), static_cast<float>(event.mouseButton.y) }, { 0.5f, 0.f });
+                    shapes.push_back(std::move(circle));
                 }
             }
         }
-
     }
 
     void Game::update() {
-        
         HandleAllCollision::CollisionManager(shapes, physicsMap);
     }
 
@@ -48,13 +53,17 @@ namespace Physics {
         window.display();
     }
 
-    std::unique_ptr<sf::Shape> Game::createBody(bool isStatic,
-        std::unordered_map<sf::Shape*, PhysicsManger>& physicsMap, const std::string& shapeType,
-        const sf::Vector2f& size, float radius)
-    {
+    std::unique_ptr<sf::Shape> Game::createBody(
+        bool isStatic,
+        std::unordered_map<sf::Shape*, PhysicsManger>& physicsMap,
+        const std::string& shapeType,
+        const sf::Vector2f& size,
+        float radius,
+        const sf::Vector2f& position,
+        const sf::Vector2f& initialVelocity
+    ) {
         std::unique_ptr<sf::Shape> shape;
 
-        // Create a shape based on the shape type
         if (shapeType == "Circle") {
             shape = std::make_unique<sf::CircleShape>(radius);
         }
@@ -62,34 +71,20 @@ namespace Physics {
             shape = std::make_unique<sf::RectangleShape>(size);
         }
         else {
-            throw std::invalid_argument("Invalid ShapeType!");
+            throw std::invalid_argument("Invalid ShapeType! Must be 'Circle' or 'Box'.");
         }
+        shape->setPosition(position);
+        shape->setFillColor(isStatic ? sf::Color::Cyan : sf::Color::White);
 
-        // Set the position to the mouse click position
-        
-         if (isStatic) {
-             shape->setPosition(static_cast<float>(event.mouseButton.x), static_cast<float>(event.mouseButton.y));
-             shape->setFillColor(sf::Color::Green); 
-         }
-         else {
-             shape->setPosition(350.f, 500.f);
-             shape->setFillColor(sf::Color::Red);
-         }
-
-        // Setting up the physics properties
         PhysicsManger props;
         props.shapeType = shapeType;
         props.isStatic = isStatic;
-        props.mass = isStatic ? std::numeric_limits<float>::infinity() : 1.0f;
-        props.velocity = isStatic ? sf::Vector2f(0.f, 0.f) : sf::Vector2f(0.1f, 0.f);
+        props.mass = isStatic ? 0.0f : 1.0f;
+        props.velocity = isStatic ? sf::Vector2f(0.f, 0.f) : initialVelocity;
         props.restitution = 0.5f;
         props.area = (shapeType == "Circle") ? 3.14159f * radius * radius : size.x * size.y;
 
-        // Add the shape to the physics map
         physicsMap[shape.get()] = props;
-
         return shape;
     }
 }
-
-
