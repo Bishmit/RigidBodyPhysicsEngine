@@ -13,8 +13,13 @@ namespace Physics {
         int WIDTH, HEIGHT; 
         void processEvents();
         void update();
+        void applyForces();
         void render();
         std::unique_ptr<sf::Shape> createBody(bool isStatic, std::unordered_map<sf::Shape*, PhysicsManger>& physicsMap, const std::string& shapeType, const sf::Vector2f& size, float radius, const sf::Vector2f& position, const sf::Vector2f& initialVelocity);
+        /*std::unique_ptr<sf::Shape> createBody(bool isStatic, std::unordered_map<sf::Shape*, PhysicsManger>& physicsMap, 
+            const std::string& shapeType, const sf::Vector2f& size, float radius, const sf::Vector2f& position, 
+            const sf::Vector2f& initialVelocity, const sf::Vector2f& initialAcceleration,
+            float force, const sf::Vector2f& mass);*/
         sf::RenderWindow window;
         sf::Clock clock;
         std::unique_ptr<sf::RectangleShape> rect;
@@ -28,5 +33,6 @@ namespace Physics {
         bool lockClick = false;
         sf::Clock spawnClock;       
         sf::Time spawnInterval;  
+        void step(float deltaTime);
     };
 }

@@ -9,8 +9,8 @@ void HandleAllCollision::CollisionManager(
     std::vector<std::unique_ptr<sf::Shape>>& shapes,
     std::unordered_map<sf::Shape*, PhysicsManger>& physicsMap
 ) {
-    const sf::Vector2f gravity(0.0f, 5.0f); 
-    const int maxIterations = 10;          
+    const sf::Vector2f gravity(0.0f, 5.0f);
+    const int maxIterations = 10;
 
     // Apply gravity to all dynamic bodies
     for (auto& shape : shapes) {
@@ -18,15 +18,17 @@ void HandleAllCollision::CollisionManager(
         PhysicsManger& props = physicsMap[currentShape];
 
         if (!props.isStatic) {
-            currentShape->move(gravity);
+            currentShape->move(gravity);  
         }
+
     }
 
-    // Iterative collision resolution
     for (int iteration = 0; iteration < maxIterations; ++iteration) {
         bool resolvedAll = true;
 
         for (size_t i = 0; i < shapes.size(); ++i) {
+            bool collide = false;
+
             for (size_t j = i + 1; j < shapes.size(); ++j) {
                 sf::Shape* shapeA = shapes[i].get();
                 sf::Shape* shapeB = shapes[j].get();
@@ -35,7 +37,7 @@ void HandleAllCollision::CollisionManager(
                 PhysicsManger& props2 = physicsMap[shapeB];
 
                 sf::Vector2f normal;
-                float depth; 
+                float depth;
                 sf::Vector2f displacement;
 
                 // Circle-Circle Collision
@@ -49,6 +51,7 @@ void HandleAllCollision::CollisionManager(
                         normal, depth)) {
                         displacement = normal * depth;
                         resolvedAll = false;
+                        collide = true;
 
                         if (props1.isStatic) {
                             circle2->move(displacement);
@@ -70,6 +73,7 @@ void HandleAllCollision::CollisionManager(
                     if (rect1 && rect2 && RectangleCollision::checkCollision(*rect1, *rect2, normal, depth)) {
                         displacement = normal * depth;
                         resolvedAll = false;
+                        collide = true;
 
                         if (props1.isStatic) {
                             rect2->move(displacement);
@@ -95,6 +99,7 @@ void HandleAllCollision::CollisionManager(
                         *rect, *circle, normal, depth)) {
                         displacement = normal * depth;
                         resolvedAll = false;
+                        collide = true;
 
                         if (props1.isStatic) {
                             circle->move(displacement);
@@ -108,10 +113,33 @@ void HandleAllCollision::CollisionManager(
                         }
                     }
                 }
+
+                // Apply collision outline effect if collision occurs
+                if (collide) {
+                    shapeA->setOutlineThickness(-2.f);
+                    shapeA->setOutlineColor(sf::Color::Red);
+                    shapeB->setOutlineThickness(-2.f);
+                    shapeB->setOutlineColor(sf::Color::Red);
+                }
+                collide = false; 
             }
         }
-
-        // Break if all collisions are resolved
         if (resolvedAll) break;
+    }
+
+}
+
+void HandleAllCollision::removeOffScreenShapes(std::vector<std::unique_ptr<sf::Shape>>& shapes, const sf::RenderWindow& window) {
+    for (auto it = shapes.begin(); it != shapes.end(); ) {
+        sf::Shape* shape = it->get(); 
+
+        sf::FloatRect bounds = shape->getGlobalBounds();
+
+        if (bounds.left + bounds.width < 0 || bounds.top + bounds.height < 0 || bounds.left > window.getSize().x || bounds.top > window.getSize().y) {
+            it = shapes.erase(it);  
+        }
+        else {
+            ++it;  
+        }
     }
 }

@@ -1,4 +1,4 @@
-#include "Game.h"
+﻿#include "Game.h"
 #include "HandleAllCollision.h"
 
 namespace Physics {
@@ -8,7 +8,7 @@ namespace Physics {
 
         // Create a static platform at the bottom of the screen
         shapes.push_back(std::move(createBody(true, physicsMap, "Box", { 600.f, 10.f }, 0.f, { 350.f, 650.f }, { 0.f, 0.f })));
-
+       
     }
 
     void Game::run() {
@@ -28,7 +28,7 @@ namespace Physics {
             if (event.type == sf::Event::MouseButtonPressed) {
                 if (event.mouseButton.button == sf::Mouse::Left) {
                     // Create a dynamic rectangle at a predefined position
-                    auto rect = createBody(false, physicsMap, "Box", { 100.f, 50.f }, 0.f, { static_cast<float>(event.mouseButton.x), static_cast<float>(event.mouseButton.y) }, {0.f, 0.f});
+                    auto rect = createBody(false, physicsMap, "Box", { 50.f, 50.f }, 0.f, { static_cast<float>(event.mouseButton.x), static_cast<float>(event.mouseButton.y) }, { 0.f, 0.f });
                     shapes.push_back(std::move(rect));
                 }
 
@@ -43,6 +43,14 @@ namespace Physics {
 
     void Game::update() {
         HandleAllCollision::CollisionManager(shapes, physicsMap);
+        HandleAllCollision::removeOffScreenShapes(shapes, window);
+        bool check = false;  // Declare check outside the loop or function
+
+        if (!check) {
+            std::cout << "Total Body: " << shapes.size() << "\n";
+            check = true;  
+        }
+
     }
 
     void Game::render() {
@@ -79,10 +87,10 @@ namespace Physics {
         PhysicsManger props;
         props.shapeType = shapeType;
         props.isStatic = isStatic;
-        props.mass = isStatic ? 0.0f : 1.0f;
+        /*props.mass = isStatic ? 0.0f : 1.0f;
         props.velocity = isStatic ? sf::Vector2f(0.f, 0.f) : initialVelocity;
-        props.restitution = 0.5f;
-        props.area = (shapeType == "Circle") ? 3.14159f * radius * radius : size.x * size.y;
+        props.restitution = 0.5f;*/
+       // props.area = (shapeType == "Circle") ? 3.14159f * radius * radius : size.x * size.y;
 
         physicsMap[shape.get()] = props;
         return shape;
