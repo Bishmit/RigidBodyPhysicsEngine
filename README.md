@@ -3,14 +3,13 @@
   Clone the repository:
   
     git clone https://github.com/Bishmit/RigidBodyPhysicsEngine.git
-    cd project-name
+    cd RigidBodyPhysicsEngine
 
 Configure and build with CMake from visual studio for window: 
 
     mkdir build && cd build
     cmake .. -G "Visual Studio 17 2022"
     Open the generated `.sln` file in Visual Studio, set the project as the startup project, then build and run it.
-
 
 On Linux:
 
