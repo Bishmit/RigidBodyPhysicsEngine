@@ -1,5 +1,7 @@
 #pragma once
 #include <SFML/Graphics.hpp>
+#include <limits>
+#include <cmath>
 
 class RectangleCollision {
 public:

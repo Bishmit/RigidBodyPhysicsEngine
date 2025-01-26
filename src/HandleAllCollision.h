@@ -1,5 +1,6 @@
 #pragma once
 #include <SFML/Graphics.hpp>
+#include <memory>
 #include "CircleCollision.h"
 #include "RectangleCollision.h"
 #include "RectangleCircleCollision.h"

@@ -1,5 +1,7 @@
 #pragma once
 #include <SFML/Graphics.hpp>
+#include <limits>
+#include <cmath>
 
 class RectangleCircleCollision {
 public:
@@ -12,5 +14,5 @@ private:
     static std::pair<float, float> projectCircleOntoAxis(const sf::CircleShape& circle, const sf::Vector2f& axis);
     static std::vector<sf::Vector2f> getAxes(const sf::RectangleShape& rect);
     static std::vector<sf::Vector2f> getAxesCircle(const sf::RectangleShape& rect, const sf::Vector2f& circleCenter);
-    static std::vector<sf::Vector2f> RectangleCircleCollision::getCorners(const sf::RectangleShape& rect);
+    static std::vector<sf::Vector2f> getCorners(const sf::RectangleShape& rect);
 }; 

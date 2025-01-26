@@ -7,52 +7,58 @@ option(BUILD_SHARED_LIBS "Build shared libraries" OFF)
 
 include(FetchContent)
 
+# SFML Fetch Content
 FetchContent_Declare(SFML
-        GIT_REPOSITORY https://github.com/SFML/SFML.git
-        GIT_TAG 2.6.x
-        GIT_SHALLOW ON
-        EXCLUDE_FROM_ALL
-        SYSTEM)
+    GIT_REPOSITORY https://github.com/SFML/SFML.git
+    GIT_TAG 2.6.x
+    GIT_SHALLOW ON
+    EXCLUDE_FROM_ALL
+    SYSTEM)
 FetchContent_MakeAvailable(SFML)
 
+# ImGui Fetch Content
 FetchContent_Declare(ImGui
-        GIT_REPOSITORY https://github.com/ocornut/imgui
-        GIT_TAG v1.89.9
-        GIT_SHALLOW ON
-        EXCLUDE_FROM_ALL
-        SYSTEM)
+    GIT_REPOSITORY https://github.com/ocornut/imgui
+    GIT_TAG v1.89.9
+    GIT_SHALLOW ON
+    EXCLUDE_FROM_ALL
+    SYSTEM)
 FetchContent_MakeAvailable(ImGui)
 FetchContent_GetProperties(ImGui SOURCE_DIR IMGUI_DIR)
 
+# ImGui-SFML Fetch Content
 set(IMGUI_SFML_FIND_SFML OFF)
 FetchContent_Declare(ImGui-SFML
-        GIT_REPOSITORY https://github.com/SFML/imgui-sfml
-        GIT_TAG 2.6.x
-        GIT_SHALLOW ON
-        EXCLUDE_FROM_ALL
-        SYSTEM)
+    GIT_REPOSITORY https://github.com/SFML/imgui-sfml
+    GIT_TAG 2.6.x
+    GIT_SHALLOW ON
+    EXCLUDE_FROM_ALL
+    SYSTEM)
 FetchContent_MakeAvailable(ImGui-SFML)
 
+# Add executable
 add_executable(${PROJECT_NAME}
-        src/main.cpp
-        src/Game.cpp
-        src/Game.h
-        src/CircleCollision.cpp
-        src/CircleCollision.h
-        src/RectangleCollision.cpp
-        src/RectangleCollision.h
-        src/RectangleCircleCollision.cpp
-        src/RectangleCircleCollision.h
-        src/HandleAllCollision.h
-        src/HandleAllCollision.cpp
-        src/Physics.h
+    src/main.cpp
+    src/Game.cpp
+    src/Game.h
+    src/CircleCollision.cpp
+    src/CircleCollision.h
+    src/RectangleCollision.cpp
+    src/RectangleCollision.h
+    src/RectangleCircleCollision.cpp
+    src/RectangleCircleCollision.h
+    src/HandleAllCollision.h
+    src/HandleAllCollision.cpp
+    src/Physics.h
 )
 
+# Link libraries
 target_link_libraries(${PROJECT_NAME} PRIVATE sfml-graphics ImGui-SFML::ImGui-SFML)
 target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_17)
 
+# Platform-specific configurations
 if(WIN32)
-    # Copy OpenAL DLL
+    # Windows-specific: Copy OpenAL DLL
     add_custom_command(
         TARGET ${PROJECT_NAME}
         COMMENT "Copy OpenAL DLL"
@@ -87,4 +93,16 @@ if(WIN32)
             COMMENT "Copying ImGui-SFML DLLs"
         )
     endforeach()
+
+elseif(UNIX)
+    # Linux-specific: No need to copy DLLs (Use shared libraries)
+    message(STATUS "Building for Linux, no need to copy DLLs.")
+    
+    # Link with SFML shared libraries 
+    target_link_libraries(${PROJECT_NAME} PRIVATE sfml-graphics)
+
+    # If ImGui-SFML is being used, ensure the shared libraries are linked properly
+    target_link_libraries(${PROJECT_NAME} PRIVATE ImGui-SFML::ImGui-SFML)
+
 endif()
+
